@@ -1,4 +1,4 @@
-service: riga-stock-ark-cron
+service: riga-stock-cron
 
 frameworkVersion: '2 || 3'
 
@@ -9,13 +9,8 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  rateHandler:
-    handler: handler.run
-    events:
-      # Invoke Lambda function every minute
-      - schedule: rate(1 minute)
   cronHandler:
     handler: handler.run
-    events:
-      # Invoke Lambda function every 2nd minute from Mon-Fri
-      - schedule: cron(0/2 * ? * MON-FRI *)
+    # events:
+    #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday
+    #   - schedule: cron(0/3 22-13 * * MON-FRI *)
