@@ -1,3 +1,6 @@
+# MIO: ignore serverless + node modules
 .serverless
 *.pyc
 *.pyo
+
+node_modules/

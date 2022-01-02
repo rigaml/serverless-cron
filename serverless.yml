@@ -1,7 +1,7 @@
 service: riga-stock-cron
 
-frameworkVersion: '2 || 3'
-
+# MIO: Commented out the framework to use `serverless plugin install -n serverless-python-requirements`
+# frameworkVersion: '2 || 3'
 
 provider:
   name: aws
@@ -14,3 +14,6 @@ functions:
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday
     #   - schedule: cron(0/3 22-13 * * MON-FRI *)
+
+plugins:
+  - serverless-python-requirements

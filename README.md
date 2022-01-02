@@ -12,6 +12,7 @@ authorAvatar: 'https://avatars0.githubusercontent.com/u/8188?v=4&s=140'
 -->
 
 # MIO
+
 Cost AWS
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
 
@@ -47,7 +48,6 @@ functions:
 
 Detailed information about rate expressions is available in official [AWS docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions).
 
-
 ### Cron expressions syntax
 
 ```pseudo
@@ -56,14 +56,14 @@ cron(Minutes Hours Day-of-month Month Day-of-week Year)
 
 All fields are required and time zone is UTC only.
 
-| Field         | Values         | Wildcards     |
-| ------------- |:--------------:|:-------------:|
-| Minutes       | 0-59           | , - * /       |
-| Hours         | 0-23           | , - * /       |
-| Day-of-month  | 1-31           | , - * ? / L W |
-| Month         | 1-12 or JAN-DEC| , - * /       |
-| Day-of-week   | 1-7 or SUN-SAT | , - * ? / L # |
-| Year          | 192199      | , - * /       |
+| Field        |     Values      |   Wildcards    |
+| ------------ | :-------------: | :------------: |
+| Minutes      |      0-59       |    , - \* /    |
+| Hours        |      0-23       |    , - \* /    |
+| Day-of-month |      1-31       | , - \* ? / L W |
+| Month        | 1-12 or JAN-DEC |    , - \* /    |
+| Day-of-week  | 1-7 or SUN-SAT  | , - \* ? / L # |
+| Year         |     192199      |    , - \* /    |
 
 In below example, we use `cron` syntax to define `schedule` event that will trigger our `cronHandler` function every second minute every Monday through Friday
 
@@ -76,7 +76,6 @@ functions:
 ```
 
 Detailed information about cron expressions in available in official [AWS docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions).
-
 
 ## Usage
 
@@ -153,3 +152,6 @@ serverless plugin install -n serverless-python-requirements
 ```
 
 Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
+
+-Boto3: AWS SDK
+https://towardsdatascience.com/introduction-to-pythons-boto3-c5ac2a86bb63
