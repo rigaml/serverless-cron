@@ -20,6 +20,15 @@ The above adds `serverless-python-requirements` to `plugins` section in your `se
 -Deploy to AWS
   serverless deploy
 
+docker-compose build
+docker-compose run
+docker-compose run rigacron
+docker-compose run rigacron bash
+
+aws s3api list-buckets --endpoint-url=http://localhost:4566  
+
+python3 ./functions/handler.py
+
 -AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
 
