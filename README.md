@@ -1,20 +1,29 @@
-<!--
-title: 'AWS Python Scheduled Cron example in Python'
-description: 'This is an example of creating a function that runs as a cron job using the serverless ''schedule'' event.'
-layout: Doc
-framework: v1
-platform: AWS
-language: Python
-priority: 2
-authorLink: 'https://github.com/rupakg'
-authorName: 'Rupak Ganguly'
-authorAvatar: 'https://avatars0.githubusercontent.com/u/8188?v=4&s=140'
--->
 
 # MIO
 
-Cost AWS
+-Check version installed
+  aws --version
+
+-Setup credetials
+  aws configure
+  IAM user name: pluralsight + (Ke passa)
+
+To test functions locally
+  serverless invoke local --function <serverless-function>
+  ex. serverless invoke local --function cronHanler
+
+To be able to include 3rd party dependencies in the `requirements.txt` 
+  serverless plugin install -n serverless-python-requirements
+
+The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process. 
+
+-Deploy to AWS
+  serverless deploy
+
+-AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
+
+====== INSTRUCTIONS IN THE REPO
 
 # Serverless Framework Python Scheduled Cron on AWS
 
