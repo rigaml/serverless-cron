@@ -3,6 +3,9 @@ service: riga-cron
 # MIO: Commented out the framework to use `serverless plugin install -n serverless-python-requirements`
 # frameworkVersion: '2 || 3'
 
+plugins:
+  - serverless-python-requirements
+
 provider:
   name: aws
   runtime: python3.8
@@ -11,9 +14,11 @@ provider:
 functions:
   cronHandler:
     handler: scr/functions/handler.run
+    events:
+      - http:
+          method: get
+          path: /download
+
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday
     #   - schedule: cron(0/3 22-13 * * MON-FRI *)
-
-plugins:
-  - serverless-python-requirements

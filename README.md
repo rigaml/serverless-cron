@@ -1,12 +1,43 @@
 
 # MIO
 
--Check version installed
-  aws --version
+## TODO / NEXT TECHDAY
 
--Setup credetials
-  aws configure
-  IAM user name: pluralsight + (Ke passa)
+-MIO: How to deploy lambdas to localstack locally
+Localstack with Terraform and Docker for running AWS locally
+https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-locally-3a6d
+
+## Instructions
+
+-Check version installed
+``` bash
+  aws --version
+```
+
+``` bash
+  docker-compose build
+  docker-compose run rigacron
+  docker-compose run rigacron bash
+```
+
+-Check what buckets are in the container
+``` bash
+aws s3api list-buckets --endpoint-url=http://localhost:4566
+```
+
+-Check lambdas defined
+``` bash
+aws lambda list-functions --max-items 10 --endpoint-url=http://localhost:4566
+```
+
+python3 ./functions/handler.py
+
+aws lambda invoke --function-name testFunction --cli-binary-format raw-in-base64-out --payload file://event.json response.json
+
+-Setup credetials with IAM user name: pluralsight + (Ke passa)
+``` bash
+  aws configure  
+```
 
 To test functions locally
   serverless invoke local --function <serverless-function>
@@ -19,15 +50,6 @@ The above adds `serverless-python-requirements` to `plugins` section in your `se
 
 -Deploy to AWS
   serverless deploy
-
-docker-compose build
-docker-compose run
-docker-compose run rigacron
-docker-compose run rigacron bash
-
-aws s3api list-buckets --endpoint-url=http://localhost:4566  
-
-python3 ./functions/handler.py
 
 -AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
