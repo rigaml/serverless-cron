@@ -3,13 +3,24 @@
 
 ## TODO / NEXT TECHDAY
 
+-MIO: How to deploy lambdas locally
+   +When list the lambdas in localstack displays []
+
 -MIO: How to deploy lambdas to localstack locally
-Localstack with Terraform and Docker for running AWS locally
+Article: Localstack with Terraform and Docker for running AWS locally
 https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-locally-3a6d
+
+-MIO: How to trigger the lambdas locally
+
+-MIO: How to deploy to AWS with Terraform
+
+-MIO: How to deploy SQLite with permissions to write in AWS S3 file
+
+
 
 ## Instructions
 
--Check version installed
+-Check AWS CLI version installed
 ``` bash
   aws --version
 ```
@@ -20,9 +31,10 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
   docker-compose run rigacron bash
 ```
 
--Check what buckets are in the container
+-S3 commands
 ``` bash
 aws s3api list-buckets --endpoint-url=http://localhost:4566
+aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
 ```
 
 -Check lambdas defined
