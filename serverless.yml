@@ -4,6 +4,8 @@ service: riga-cron
 # frameworkVersion: '2 || 3'
 
 plugins:
+  - serverless-offline
+  - serverless-iam-roles-per-function
   - serverless-python-requirements
 
 provider:
@@ -13,11 +15,11 @@ provider:
 
 functions:
   cronHandler:
-    handler: scr/functions/handler.run
+    handler: src/functions/handler.run
     events:
       - http:
           method: get
-          path: /download
+          path: download
 
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday

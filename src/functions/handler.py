@@ -10,9 +10,9 @@ logger.setLevel(logging.INFO)
 
 def run(event, context):
     s3_client = boto3.client('s3',
-    aws_access_key_id='dummy_key_id',
-    aws_secret_access_key='dummy_access_key',
-    endpoint_url='http://host.docker.internal:4566')
+        aws_access_key_id='dummy_key_id',
+        aws_secret_access_key='dummy_access_key',
+        endpoint_url='http://host.docker.internal:4566')
 
     print(s3_client.list_buckets())
 

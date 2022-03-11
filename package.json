@@ -2,10 +2,16 @@
   "name": "riga-stock-cron",
   "version": "1.0.0",
   "description": "Example of creating a function that runs as a cron job using the serverless `schedule` event",
-  "author": "",
-  "license": "MIT",
+  "author": "Ricardo",
+  "private": true,
+  "scripts": {
+    "localstack": "docker-compose -f docker-compose.yml up",
+    "dev": "serverless offline start --printOutput --stage local"
+  },
   "devDependencies": {
     "serverless": "^2.69.1",
-    "serverless-python-requirements": "^5.3.0"
+    "serverless-offline": "^6.9.0",
+    "serverless-python-requirements": "^5.3.0",
+    "serverless-iam-roles-per-function": "^3.1.0"
   }
 }

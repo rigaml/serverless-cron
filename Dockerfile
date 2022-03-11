@@ -1,5 +1,34 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
+# https://github.com/docker-library/python/blob/0f753da42f7ca178a073836c4532dc1433d6cac0/3.9/slim-buster/Dockerfile
 FROM python:3.9-slim-buster
+
+
+#### Serverless
+## Installing NodeJS and npm
+
+# Use root user to have permissions to install
+USER root
+
+# Installing NodeJS
+RUN apt-get update -yq \
+    && apt-get -yq install curl \
+    && curl -L https://deb.nodesource.com/setup_16.x | bash \
+    && apt-get update -yq \
+    && apt-get install -yq \
+        nodejs
+
+RUN npm install -g serverless
+RUN npm install -g serverless-offline
+RUN npm install -g yarn
+
+WORKDIR /usr/src
+
+COPY package*.json ./
+
+RUN yarn
+
+EXPOSE 3000
+
+#### Python requirements for the container
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -15,15 +44,12 @@ RUN python3 -m venv /app
 #Install the requirements
 RUN python3 -m pip install -r requirements.txt
 
-WORKDIR /app
-COPY ./src /app
+WORKDIR /usr/src/app
+COPY ./src ./
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
 USER appuser
-
-EXPOSE 3000
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["python", "localstack/setup.py"]
