@@ -1,5 +1,5 @@
 {
-  "name": "riga-stock-cron",
+  "name": "riga-cron",
   "version": "1.0.0",
   "description": "Example of creating a function that runs as a cron job using the serverless `schedule` event",
   "author": "Ricardo",

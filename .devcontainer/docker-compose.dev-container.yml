@@ -17,4 +17,5 @@ services:
 
 volumes:
   riga-cron:
+    driver: local
   vscode-extensions:
