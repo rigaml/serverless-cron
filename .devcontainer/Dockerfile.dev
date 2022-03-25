@@ -16,6 +16,7 @@ RUN apt-get update -yq \
     && apt-get autoremove -y \
     && apt-get clean -y
 
+# Installing packages required by serverless
 RUN npm install -g serverless
 RUN npm install -g serverless-offline
 RUN npm install -g yarn
@@ -30,7 +31,7 @@ COPY terraform ./
 
 EXPOSE 3000
 
-#### Python requirements for the container
+#### Python
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1

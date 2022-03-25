@@ -2,6 +2,11 @@
 # MIO
 
 ## TODO / NEXT TECHDAY
+-MIO: How set variables to get right values for different environments. Ex.
+    s3_client = boto3.client('s3',
+        aws_access_key_id='dummy_key_id',
+        aws_secret_access_key='dummy_access_key',
+        endpoint_url='http://host.docker.internal:4566')
 
 -MIO: How to deploy lambdas locally
    +When list the lambdas in localstack displays []

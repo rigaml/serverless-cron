@@ -6,8 +6,10 @@ services:
       dockerfile: .devcontainer/Dockerfile.dev
     init: true
     volumes:
-      # Use a named volume for the source code
-      - riga-cron:/usr/src
+      # Map data folder to local folder
+      - ./data:/usr/src/app/data
+      # Use a named volume for the source code (app code, node_modules...)
+      - app:/usr/src
       # Persist VS Code extensions between rebuilds
       - vscode-extensions:/root/.vscode-server/extensions
 
@@ -16,6 +18,7 @@ services:
     command: sleep infinity
 
 volumes:
-  riga-cron:
+  rigacron:
     driver: local
+  app:
   vscode-extensions:
