@@ -23,9 +23,10 @@ RUN npm install -g yarn
 
 WORKDIR /usr/src
 
+COPY terraform ./terraform
 COPY package*.json ./
 COPY docker-compose*.yml ./
-COPY terraform ./
+COPY README.md ./
 
 # RUN yarn
 
