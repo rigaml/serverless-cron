@@ -18,8 +18,3 @@ services:
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
       - /var/run/docker.sock:/var/run/docker.sock
-
-# Allows to save data in the host of the container
-volumes:
-  rigacron:
-    driver: local

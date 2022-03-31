@@ -7,9 +7,9 @@ services:
     init: true
     volumes:
       # Map data folder to local folder
-      - ./data:/usr/src/app/data
+      - ./:/usr/src
       # Use a named volume for the source code (app code, node_modules...)
-      - app:/usr/src
+      # - node-modules:/root/.node-modules
       # Persist VS Code extensions between rebuilds
       - vscode-extensions:/root/.vscode-server/extensions
 
