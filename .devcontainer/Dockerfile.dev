@@ -7,6 +7,9 @@ FROM python:3.9-slim-buster
 # Use root user to have permissions to install
 # USER root
 
+WORKDIR /usr/src
+COPY . .
+
 # Installing NodeJS
 RUN apt-get update -yq \
     && apt-get -yq install curl \
@@ -21,12 +24,10 @@ RUN npm install -g serverless
 RUN npm install -g serverless-offline
 RUN npm install -g yarn
 
-WORKDIR /usr/src
-
-COPY terraform ./terraform
-COPY package*.json ./
-COPY docker-compose*.yml ./
-COPY README.md ./
+# COPY terraform ./terraform
+# COPY package*.json ./
+# COPY docker-compose*.yml ./
+# COPY README.md ./
 
 # RUN yarn
 

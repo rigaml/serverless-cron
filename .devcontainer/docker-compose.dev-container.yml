@@ -2,14 +2,16 @@ version: "3.8"
 services:
   rigacron:
     build:
+      # Where is the Dockerfile relative to the compose file. This directory is also the build context sent to the Docker daemon.
+      # https://stackoverflow.com/questions/65622477/what-is-context-in-docker-compose
       context: ..
       dockerfile: .devcontainer/Dockerfile.dev
     init: true
     volumes:
       # Map data folder to local folder
-      - ./:/usr/src
-      # Use a named volume for the source code (app code, node_modules...)
-      # - node-modules:/root/.node-modules
+      - ../:/usr/src
+      # Named volume to persist node_modules
+      - node-modules:/root/.node-modules
       # Persist VS Code extensions between rebuilds
       - vscode-extensions:/root/.vscode-server/extensions
 
@@ -18,7 +20,5 @@ services:
     command: sleep infinity
 
 volumes:
-  rigacron:
-    driver: local
-  app:
+  node-modules:
   vscode-extensions:
