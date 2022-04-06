@@ -1,10 +1,10 @@
-
 # MIO
 
 ## TODO / NEXT TECHDAY
+
 -MIO: How to assign IAM role to lambda so it doesn't need credentials to access AWS resources (s3...)
 -MIO: How to deploy lambdas locally
-   +When list the lambdas in localstack displays []
++When list the lambdas in localstack displays []
 
 -MIO: How to deploy lambdas to localstack locally
 Article: Localstack with Terraform and Docker for running AWS locally
@@ -16,32 +16,33 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 
 -MIO: How to deploy SQLite with permissions to write in AWS S3 file
 
-
-
 ## Instructions
 
 -Regenerate image after a change
-Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container 
+Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container
 
 -Check AWS CLI version installed
-``` bash
+
+```bash
   aws --version
 ```
 
-``` bash
+```bash
   docker-compose build
   docker-compose run rigacron
   docker-compose run rigacron bash
 ```
 
 -S3 commands
-``` bash
+
+```bash
 aws s3api list-buckets --endpoint-url=http://localhost:4566
 aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
 ```
 
 -Check lambdas defined
-``` bash
+
+```bash
 aws lambda list-functions --max-items 10 --endpoint-url=http://localhost:4566
 ```
 
@@ -50,21 +51,22 @@ python3 ./functions/handler.py
 aws lambda invoke --function-name testFunction --cli-binary-format raw-in-base64-out --payload file://event.json response.json
 
 -Setup credetials with IAM user name: pluralsight + (Ke passa)
-``` bash
-  aws configure  
+
+```bash
+  aws configure
 ```
 
 To test functions locally
-  serverless invoke local --function <serverless-function>
-  ex. serverless invoke local --function cronHanler
+serverless invoke local --function <serverless-function>
+ex. serverless invoke local --function cronHanler
 
-To be able to include 3rd party dependencies in the `requirements.txt` 
-  serverless plugin install -n serverless-python-requirements
+To be able to include 3rd party dependencies in the `requirements.txt`
+serverless plugin install -n serverless-python-requirements
 
-The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process. 
+The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process.
 
 -Deploy to AWS
-  serverless deploy
+serverless deploy
 
 -AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml

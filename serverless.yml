@@ -15,11 +15,17 @@ provider:
 
 functions:
   cronHandler:
-    handler: src/functions/handler.run
+    handler: src/functions/downloader.run
     events:
       - http:
           method: get
           path: download
+    iamRoleStatementsName: riga-cron-downloader-role
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - s3:putObject
+        Resource: ${self:custom.infrastructureReceiptS3BucketArn}/*
 
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday

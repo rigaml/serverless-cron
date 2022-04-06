@@ -1,0 +1,3 @@
+region: us-east-1
+resource_prefix: prd-riga-cron
+infrastructure_receiptS3BucketArn: ${terraform:downloadBucketArn}
