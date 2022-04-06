@@ -1,4 +1,3 @@
-# https://github.com/docker-library/python/blob/0f753da42f7ca178a073836c4532dc1433d6cac0/3.9/slim-buster/Dockerfile
 FROM python:3.9-slim-buster
 
 #### Serverless
@@ -8,16 +7,28 @@ FROM python:3.9-slim-buster
 # USER root
 
 WORKDIR /usr/src
-COPY . .
+# COPY . .
 
-# Installing NodeJS
+# Install NodeJS
 RUN apt-get update -yq \
+    && apt-get upgrade -y \
+    && apt-get dist-upgrade -y \
     && apt-get -yq install curl \
     && curl -L https://deb.nodesource.com/setup_16.x | bash \
-    && apt-get update -yq \
     && apt-get install -yq nodejs \
     && apt-get autoremove -y \
     && apt-get clean -y
+
+# Install Unzip : https://stackoverflow.com/questions/41651145/docker-container-not-able-to-locate-zip-packages
+RUN apt-get install -y unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI 2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip \
+    && rm -rf ./aws
 
 # Installing packages required by serverless
 RUN npm install -g serverless
@@ -44,17 +55,17 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 
-#Create a virtual environment
-RUN python3 -m venv /app
+#Create a virtual environment - avoids clashes between Python packages installed in requirements and packages in current OS or if updated  
+RUN python3 -m venv /usr/src/app
 #Install the requirements
 RUN python3 -m pip install -r requirements.txt
 
-WORKDIR /usr/src/app
-COPY ./src ./
+# WORKDIR /usr/src/app
+# COPY ./src ./
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["python", "localstack/setup.py"]
+CMD ["python3", "localstack/setup.py"]

@@ -20,6 +20,9 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 
 ## Instructions
 
+-Regenerate image after a change
+Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container 
+
 -Check AWS CLI version installed
 ``` bash
   aws --version
