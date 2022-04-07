@@ -26,6 +26,8 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 README.md
-# MIO: Added
+
+##### MIO:RIGA
 **/.devcontainer
 **/.serverless
+/yarn-error.log

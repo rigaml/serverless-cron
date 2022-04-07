@@ -21,16 +21,19 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 -Regenerate image after a change
 Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container
 
--Check AWS CLI version installed
+- Serverless Getting started
+https://www.serverless.com/framework/docs/getting-started
 
+
+- Check if AWS CLI installed
 ```bash
   aws --version
 ```
 
+-Setup credetials with IAM user name: pluralsight + (Ke passa)
+
 ```bash
-  docker-compose build
-  docker-compose run rigacron
-  docker-compose run rigacron bash
+  aws configure
 ```
 
 -S3 commands
@@ -50,15 +53,9 @@ python3 ./functions/handler.py
 
 aws lambda invoke --function-name testFunction --cli-binary-format raw-in-base64-out --payload file://event.json response.json
 
--Setup credetials with IAM user name: pluralsight + (Ke passa)
-
-```bash
-  aws configure
-```
-
 To test functions locally
 serverless invoke local --function <serverless-function>
-ex. serverless invoke local --function cronHanler
+ex. serverless invoke local --function cronDownloader
 
 To be able to include 3rd party dependencies in the `requirements.txt`
 serverless plugin install -n serverless-python-requirements

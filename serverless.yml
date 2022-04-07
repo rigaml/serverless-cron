@@ -7,6 +7,7 @@ plugins:
   - serverless-offline
   - serverless-iam-roles-per-function
   - serverless-python-requirements
+  - serverless-prune-plugin
 
 provider:
   name: aws
@@ -14,8 +15,8 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  cronHandler:
-    handler: src/functions/downloader.run
+  cronDownloader:
+    handler: src/functions/cron-downloader.run
     events:
       - http:
           method: get
@@ -25,7 +26,7 @@ functions:
       - Effect: "Allow"
         Action:
           - s3:putObject
-        Resource: ${self:custom.infrastructureReceiptS3BucketArn}/*
+        Resource: ${self:custom.infrastructureCronS3BucketArn}/*
 
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday

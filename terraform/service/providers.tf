@@ -1,5 +1,5 @@
 provider "aws" {
-  region                      = var.integration_test_deployment ? "us-west-2" : "eu-west-1"
+  region                      = var.integration_test_deployment ? "us-east-1" : "us-east-1"
   access_key                  = var.integration_test_deployment ? "fake-access-key-id" : ""
   secret_key                  = var.integration_test_deployment ? "fake-secret-key" : ""
   s3_force_path_style         = var.integration_test_deployment ? true : false
