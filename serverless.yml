@@ -8,7 +8,6 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-python-requirements
   - serverless-prune-plugin
-
 provider:
   name: aws
   runtime: python3.8
@@ -17,7 +16,7 @@ provider:
 functions:
   cronDownloader:
     handler: src/functions/cron-downloader.run
-    events:
+    events: 
       - http:
           method: get
           path: download
@@ -31,3 +30,12 @@ functions:
     # events:
     #   # Invoke function (US region times): Every 3 minutes, between 07:00 PM and 08:59 AM, Monday through Friday
     #   - schedule: cron(0/3 22-13 * * MON-FRI *)
+
+custom:
+  stage: ${opt:stage, 'local'}
+  filename: ./config/serverless.${self:custom.stage}.config.yml
+  env: ${opt:env, 'dev'}
+  infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_receiptS3BucketArn,''}
+  prune:
+    automatic: true
+    number: 3

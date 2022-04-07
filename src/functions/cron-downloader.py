@@ -4,6 +4,7 @@ import boto3
 import pandas as pd
 import requests
 
+# https://towardsdatascience.com/introduction-to-amazon-lambda-layers-and-boto3-using-python3-39bd390add17
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

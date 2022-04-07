@@ -29,14 +29,6 @@ RUN apt-get update -yq \
     && apt-get autoremove -y \
     && apt-get clean -y
 
-# Installing Node packages required by serverless
-RUN npm install -g yarn
-RUN npm install -g serverless
-RUN npm install serverless-offline --save-dev
-RUN npm install serverless-iam-roles-per-function --save-dev
-RUN npm install serverless-prune-plugin --save-dev
-
-
 # Install Unzip : https://stackoverflow.com/questions/41651145/docker-container-not-able-to-locate-zip-packages
 RUN apt-get install -y unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -48,7 +40,14 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && rm -rf awscliv2.zip \
     && rm -rf ./aws
 
-# RUN yarn
+# Installing Node packages required by serverless
+RUN npm install -g yarn
+RUN yarn global add serverless
+RUN yarn add serverless-offline -D
+RUN yarn add serverless-iam-roles-per-function -D
+RUN yarn add serverless-prune-plugin -D
+
+RUN yarn
 
 EXPOSE 3000
 
@@ -72,8 +71,8 @@ RUN python3 -m pip install -r requirements.txt
 # COPY ./src ./
 
 # Creates a non-root user with an explicit UID and adds permission to access the folder
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
-USER appuser
+# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
+# USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["python3", "localstack/setup.py"]

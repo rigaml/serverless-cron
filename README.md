@@ -24,14 +24,17 @@ Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container
 - Serverless Getting started
 https://www.serverless.com/framework/docs/getting-started
 
+-Installing prune
+```
+   sls plugin install -n serverless-prune-plugin
+```
 
 - Check if AWS CLI installed
 ```bash
   aws --version
 ```
 
--Setup credetials with IAM user name: pluralsight + (Ke passa)
-
+- Setup credetials with IAM user name: pluralsight + (Ke passa)
 ```bash
   aws configure
 ```
@@ -62,8 +65,8 @@ serverless plugin install -n serverless-python-requirements
 
 The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process.
 
--Deploy to AWS
-serverless deploy
+-Deploy to AWS: https://serverless-stack.com/chapters/stages-in-serverless-framework.html
+serverless deploy --stage dev
 
 -AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
