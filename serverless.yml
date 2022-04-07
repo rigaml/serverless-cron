@@ -35,7 +35,7 @@ custom:
   stage: ${opt:stage, 'local'}
   filename: ./config/serverless.${self:custom.stage}.config.yml
   env: ${opt:env, 'dev'}
-  infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_receiptS3BucketArn,''}
+  infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_cronS3BucketArn,''}
   prune:
     automatic: true
     number: 3

@@ -1,3 +1,4 @@
 region: us-east-1
 resource_prefix: prd-riga-cron
-infrastructure_receiptS3BucketArn: ${terraform:downloadBucketArn}
+# infrastructure_cronS3BucketArn: ${terraform:downloadBucketArn}
+infrastructure_cronS3BucketArn: arn:aws:s3:::riga-cron-data

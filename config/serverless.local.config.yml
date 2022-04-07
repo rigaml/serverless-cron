@@ -3,4 +3,4 @@ SECRETSMANAGER_ENDPOINT: http://localstack:4566
 S3_ENDPOINT: http://localstack:4566
 SNS_ENDPOINT: http://localstack:4566
 resource_prefix: local-riga-cron
-infrastructure_receiptS3BucketArn: "arn:aws:s3:::localstack-riga-cron-downloads"
+infrastructure_cronS3BucketArn: "arn:aws:s3:::localstack-riga-cron-downloads"
