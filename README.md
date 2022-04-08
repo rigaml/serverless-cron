@@ -11,6 +11,15 @@ https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-f
 https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
 https://spin.atomicobject.com/2021/06/16/docker-development-container/
 
+### Errors
+1) root@763e515bbffd:/usr/src# aws s3api list-buckets
+Unable to redirect output to pager. Received the following error when opening pager:
+[Errno 2] No such file or directory: 'less'
+Learn more about configuring the output pager by running "aws help config-vars".
+2) root@763e515bbffd:/usr/src# serverless deploy --stage prd
+Error: spawn python3.8 ENOENT
+
+
 -MIO: How to assign IAM role to lambda so it doesn't need credentials to access AWS resources (s3...)
 -MIO: How to deploy lambdas locally
 +When list the lambdas in localstack displays []
@@ -28,7 +37,7 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 ## Instructions
 
 -Regenerate image after a change
-Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container
+F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
 
 - Serverless Getting started
   https://www.serverless.com/framework/docs/getting-started
