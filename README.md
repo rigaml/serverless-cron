@@ -2,6 +2,15 @@
 
 ## TODO / NEXT TECHDAY
 
+-Create a development container
+https://code.visualstudio.com/docs/remote/create-dev-container
+-Docker from Docker Compose
+https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
+
+-Using Docker as a Dev Environment with VS Code
+https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
+https://spin.atomicobject.com/2021/06/16/docker-development-container/
+
 -MIO: How to assign IAM role to lambda so it doesn't need credentials to access AWS resources (s3...)
 -MIO: How to deploy lambdas locally
 +When list the lambdas in localstack displays []
@@ -22,19 +31,22 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 Ctrl+Shift+P -> Remote-Container: Rebuild and Reopen Container
 
 - Serverless Getting started
-https://www.serverless.com/framework/docs/getting-started
+  https://www.serverless.com/framework/docs/getting-started
 
 -Installing prune
+
 ```
    sls plugin install -n serverless-prune-plugin
 ```
 
 - Check if AWS CLI installed
+
 ```bash
   aws --version
 ```
 
 - Setup credetials with IAM user name: pluralsight + (Ke passa)
+
 ```bash
   aws configure
 ```
@@ -66,7 +78,7 @@ serverless plugin install -n serverless-python-requirements
 The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process.
 
 -Deploy to AWS: https://serverless-stack.com/chapters/stages-in-serverless-framework.html
-serverless deploy --stage dev
+serverless deploy --stage prd
 
 -AWS Cost
 https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
