@@ -6,12 +6,16 @@ service: riga-cron
 plugins:
   - serverless-offline
   - serverless-iam-roles-per-function
+  # bundles requirements when you run sls deploy: https://www.serverless.com/plugins/serverless-python-requirements
+  #    https://www.npmjs.com/package/serverless-python-requirements
   - serverless-python-requirements
   - serverless-prune-plugin
+  # Specify in .slsignore files ignored by serverless: https://www.serverless.com/plugins/serverless-ignore
+  - serverless-ignore
+
 provider:
   name: aws
   runtime: python3.8
-  lambdaHashingVersion: 20201221
 
 functions:
   cronDownloader:
@@ -20,6 +24,8 @@ functions:
       - http:
           method: get
           path: download
+    layers:
+      - Ref: PythonRequirementsLambdaLayer          
     iamRoleStatementsName: riga-cron-downloader-role
     iamRoleStatements:
       - Effect: "Allow"
@@ -36,6 +42,11 @@ custom:
   filename: ./config/serverless.${self:custom.stage}.config.yml
   env: ${opt:env, 'local'}
   infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_cronS3BucketArn,''}
+
+  pythonRequirements:
+    # zip: true
+    layer: true
+    slim: true
   prune:
     automatic: true
     number: 3

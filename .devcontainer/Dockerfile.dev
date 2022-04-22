@@ -1,13 +1,17 @@
-FROM python:3.9-slim-buster
+FROM python:3.8-slim-buster
 
 #### Serverless
-## Installing NodeJS and npm
 
 # Use root user to have permissions to install
 # USER root
 
 WORKDIR /usr/src
 # COPY . .
+
+# Creates a non-root user with an explicit UID and adds permission to access the folder
+# +NOTE: If set the user get "permission denied" when build container
+# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
+# USER appuser
 
 # Install
 RUN apt-get update -yq \
@@ -38,6 +42,8 @@ RUN apt-get update -yq \
 
 # Install Unzip : https://stackoverflow.com/questions/41651145/docker-container-not-able-to-locate-zip-packages
 RUN apt-get install -y unzip \
+    # Install "less" as used by AWS commands: https://stackoverflow.com/questions/57953187/aws-cli-has-no-output
+    && apt-get install less \
     && rm -rf /var/lib/apt/lists/*
 
 # Install AWS CLI 2
@@ -49,13 +55,14 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 # Installing Node packages required by serverless
 RUN npm install -g yarn
+# Install serverless globally - no need in packages.json
 RUN yarn global add serverless
 # No need - should be in the packages.json and installed when yarn
 # RUN yarn add serverless-offline -D
 # RUN yarn add serverless-iam-roles-per-function -D
 # RUN yarn add serverless-prune-plugin -D
 
-RUN yarn
+# RUN yarn
 
 EXPOSE 3000
 
@@ -67,7 +74,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install pip requirements
+# Copy requirements
 COPY requirements.txt .
 
 #Create a virtual environment - avoids clashes between Python packages installed in requirements and packages in current OS or if updated  

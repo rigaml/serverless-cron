@@ -2,23 +2,6 @@
 
 ## TODO / NEXT TECHDAY
 
--Create a development container
-https://code.visualstudio.com/docs/remote/create-dev-container
--Docker from Docker Compose
-https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
-
--Using Docker as a Dev Environment with VS Code
-https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
-https://spin.atomicobject.com/2021/06/16/docker-development-container/
-
-### Errors
-1) root@763e515bbffd:/usr/src# aws s3api list-buckets
-Unable to redirect output to pager. Received the following error when opening pager:
-[Errno 2] No such file or directory: 'less'
-Learn more about configuring the output pager by running "aws help config-vars".
-2) root@763e515bbffd:/usr/src# serverless deploy --stage prd
-Error: spawn python3.8 ENOENT
-
 
 -MIO: How to assign IAM role to lambda so it doesn't need credentials to access AWS resources (s3...)
 -MIO: How to deploy lambdas locally
@@ -34,6 +17,20 @@ https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-l
 
 -MIO: How to deploy SQLite with permissions to write in AWS S3 file
 
+-Create a development container
+https://code.visualstudio.com/docs/remote/create-dev-container
+-Docker from Docker Compose
+https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
+
+-Using Docker as a Dev Environment with VS Code
+https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
+https://spin.atomicobject.com/2021/06/16/docker-development-container/
+
+### Errors
+- root@763e515bbffd:/usr/src# serverless deploy --stage prd
+Error: spawn python3.8 ENOENT
+
+
 ## Instructions
 
 -Regenerate image after a change
@@ -42,29 +39,30 @@ F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
 - Serverless Getting started
   https://www.serverless.com/framework/docs/getting-started
 
--Installing prune
-
+-Installing prune by "hand" (doesn't seem to be installed from docker-compose.yml)
 ```
    sls plugin install -n serverless-prune-plugin
 ```
 
 - Check if AWS CLI installed
-
 ```bash
   aws --version
 ```
 
-- Setup credetials with IAM user name: pluralsight + (Ke passa)
-
+- Setup credetials with IAM user name: (Ke passa - serverless-test3) + us-east-1
 ```bash
   aws configure
 ```
 
 -S3 commands
-
 ```bash
 aws s3api list-buckets --endpoint-url=http://localhost:4566
 aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
+```
+
+-Perform deployment with:
+```
+serverless deploy --stage prd
 ```
 
 -Check lambdas defined
@@ -233,3 +231,15 @@ Running the above will automatically add `serverless-python-requirements` to `pl
 
 -Boto3: AWS SDK
 https://towardsdatascience.com/introduction-to-pythons-boto3-c5ac2a86bb63
+
+
+## References
+- How to Handle your Python packaging in Lambda with Serverless plugins
+Compress Python libraries to deploy
+https://www.serverless.com/blog/serverless-python-packaging/
+https://www.serverless.com/plugins/serverless-python-requirements
+
+- Serverless CLI reference
+https://www.serverless.com/framework/docs/providers/aws/cli-reference
+
+- To see the plugin version installed check package.json

@@ -18,13 +18,13 @@
     "ms-python.python",
     "ms-python.vscode-pylance",
     "github.copilot"
-  ]
+  ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
   // Uncomment the next line to run commands after the container is created - for example installing curl.
-  // "postCreateCommand": "yarn"
+  "postCreateCommand": "yarn"
 
   // Use Docker CLI from inside the container
   //   + See Docker-Compose https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose

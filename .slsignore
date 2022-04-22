@@ -1,0 +1,7 @@
+node_modules/**
+terraform/**
+config/**
+src/app/**
+src/data/**
+README.md
+docker*.yml

@@ -2,6 +2,7 @@ requests
 pandas
 openpyxl
 boto3
-numpy
-scipy
-scikit-learn
+# Removed below requirements or lambda goes over the limit
+# numpy
+# scipy
+# scikit-learn

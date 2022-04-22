@@ -8,14 +8,14 @@ services:
       dockerfile: .devcontainer/Dockerfile.dev
     init: true
     volumes:
-      # Map data folder to local folder
+      # Maps project folder to local folder
       - ../:/usr/src
       # Named volume to persist node_modules
       - node-modules:/root/.node-modules
-      # Persist VS Code extensions between rebuilds
+      # Named volume to persist VS Code extensions
       - vscode-extensions:/root/.vscode-server/extensions
-      # Forwards local Docker socket to the container: https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
-      - /var/run/docker.sock:/var/run/docker-host.sock
+      # Forwards local Docker socket to container: https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
+      - /var/run/docker.sock:/var/run/docker.sock
 
     container_name: riga-cron-development
     # Overrides default command so things don't shut down after the process ends.
