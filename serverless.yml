@@ -13,6 +13,9 @@ plugins:
   # Specify in .slsignore files ignored by serverless: https://www.serverless.com/plugins/serverless-ignore
   - serverless-ignore
 
+# Reference for parameters in serverless.yml
+# https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml
+
 provider:
   name: aws
   runtime: python3.8
@@ -30,6 +33,11 @@ functions:
     iamRoleStatements:
       - Effect: "Allow"
         Action:
+          - s3:listBucket
+        Resource: ${self:custom.infrastructureCronS3BucketArn}
+      - Effect: "Allow"
+        Action:
+          - s3:getObject
           - s3:putObject
         Resource: ${self:custom.infrastructureCronS3BucketArn}/*
 
@@ -42,7 +50,8 @@ custom:
   filename: ./config/serverless.${self:custom.stage}.config.yml
   env: ${opt:env, 'local'}
   infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_cronS3BucketArn,''}
-
+  # Reserve a maximum number of concurrent instances (default: account limit)
+  reservedConcurrency: 5
   pythonRequirements:
     # zip: true
     layer: true
