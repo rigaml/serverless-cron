@@ -4,7 +4,7 @@ import datetime
 import logging
 import pandas as pd
 import requests
-from lib.ticker_converter import ticker_converter as tc
+from modules.ticker_converter import ticker_converter as tc
 
 # https://towardsdatascience.com/introduction-to-amazon-lambda-layers-and-boto3-using-python3-39bd390add17
 
