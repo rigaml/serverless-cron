@@ -1,10 +1,11 @@
 import boto3
 import io
-import datetime
+# import datetime class inside datetime module
+from datetime import datetime
 import logging
 import pandas as pd
 import requests
-from modules.ticker_converter import ticker_converter as tc
+from src.modules.ticker_converter import ticker_converter as tc
 
 # https://towardsdatascience.com/introduction-to-amazon-lambda-layers-and-boto3-using-python3-39bd390add17
 
@@ -34,7 +35,7 @@ def run(event, context):
 
     for counter, ticker in enumerate(tickers):
         logger.info(f'ticker ({counter}): {ticker}')
-        ticker = tc.ticker_converter.convert_yahoo_name(ticker)
+        ticker = tc.convert_yahoo_name(ticker)
         if (ticker is None):
             logger.info('  > skipping ticker')
             continue
@@ -42,7 +43,7 @@ def run(event, context):
         quote_summary = f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?{query}{url_extra_query}'
         response = requests.get(quote_summary, headers=headers)
         if (response.ok):
-            s3_client.upload_fileobj(response.content, bucket_name, f'{start_date_string.replace(":", "")}-{ticker}.json')
+            s3_client.put_object(Body=response.content, Bucket=bucket_name, Key=f'{start_date_string.replace(":", "")}-{ticker}.json')
         else:
             logger.info(f'Failed to retrieve: {ticker} response {response.status_code}')
 
