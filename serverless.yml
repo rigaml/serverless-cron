@@ -19,6 +19,7 @@ plugins:
 provider:
   name: aws
   runtime: python3.8
+  timeout: 10
 
 functions:
   cronDownloader:
@@ -43,8 +44,8 @@ functions:
 
     # events:
     #   # NOTE: Times depend on AWS region deployed - should be same as NYSE
-    #   # Every 3 minutes, between 10:00 PM and 08:00 AM, Monday through Friday
-    #   - schedule: cron(0/3 22-08 * * MON-FRI *)
+    #   # Every 3 minutes, between 00:00 AM and 08:00 AM, Monday through Friday
+    #   - schedule: cron(0/3 01-07 * * MON-FRI *)
 
 custom:
   stage: ${opt:stage, 'local'}

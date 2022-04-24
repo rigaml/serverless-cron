@@ -3,7 +3,7 @@ class ticker_converter:
     @staticmethod
     def convert_yahoo_name(ticker: str) -> str:
         if not isinstance(ticker, str):
-            raise ValueError("Name should be a string.")
+            raise ValueError(f"Ticker should be a string: {ticker}")
 
         if (len(ticker) > 4):
             if (ticker.endswith('JP')):

@@ -1,8 +1,9 @@
-requests
-pandas
-openpyxl
 boto3
-# Removed below requirements or lambda goes over the limit
+requests
+# Removed to make lambda simpler
+# pandas
+# openpyxl
+# Removed or deploy to AWS lambda goes over the limit
 # numpy
 # scipy
 # scikit-learn
