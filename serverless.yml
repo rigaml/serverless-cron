@@ -28,6 +28,10 @@ functions:
       - http:
           method: get
           path: download
+      # NOTE: Times depend on AWS region deployed - should be same as NYSE
+      # Every 3 minutes, between 00:00 AM and 08:00 AM, Monday through Friday
+      # https://crontab.guru/#0/7_01-07_*_*_MON-FRI
+      - schedule: cron(0/7 01-07 ? * MON-FRI *)
     layers:
       - Ref: PythonRequirementsLambdaLayer          
     iamRoleStatementsName: riga-cron-downloader-role
@@ -42,10 +46,6 @@ functions:
           - s3:putObject
         Resource: ${self:custom.infrastructureCronS3BucketArn}/*
 
-    # events:
-    #   # NOTE: Times depend on AWS region deployed - should be same as NYSE
-    #   # Every 3 minutes, between 00:00 AM and 08:00 AM, Monday through Friday
-    #   - schedule: cron(0/3 01-07 * * MON-FRI *)
 
 custom:
   stage: ${opt:stage, 'local'}
@@ -53,7 +53,7 @@ custom:
   env: ${opt:env, 'local'}
   infrastructureCronS3BucketArn: ${file(${self:custom.filename}):infrastructure_cronS3BucketArn,''}
   # Reserve a maximum number of concurrent instances (default: account limit)
-  reservedConcurrency: 5
+  reservedConcurrency: 2
   pythonRequirements:
     # zip: true
     layer: true
