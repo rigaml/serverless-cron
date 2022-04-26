@@ -25,7 +25,7 @@ class ticker_converter:
                 
         if ticker == 'CMLF':
             return None
-        if ticker == 'HOFP':
+        if ticker == 'HOFP' or ticker == 'HO':
             return 'HO.PA'
         if (ticker in (
             'ACIC', 
