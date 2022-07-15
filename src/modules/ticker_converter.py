@@ -14,20 +14,24 @@ class ticker_converter:
                 return ticker[:-2] + ".PA"
             if (ticker.endswith('CN')):
                 return ticker[:-2] + ".TO"
-            if (ticker.endswith('DSYSJ')):
-                return 'DSY.JO'
             if (ticker.endswith('LI')):
                 return None
+            if (ticker == '4689 JT' or ticker == '4689JT'):
+                return '4689.T'
+            if (ticker == 'DSYSJ'):
+                return 'DSY.JO'
             if ticker == 'ADYENNA':
                 return 'ADYYF'
             if ticker == 'CMIIU':
                 return 'SLGC'
-                
-        if ticker == 'CMLF':
-            return None
+
+        #tickers with 4 or less letters
+        if ticker == 'DSY':
+            return 'DSY.JO'
         if ticker == 'HOFP' or ticker == 'HO':
             return 'HO.PA'
         if (ticker in (
+            'CMLF',
             'ACIC', 
             'GLEO', 
             'AONE', 
@@ -39,7 +43,8 @@ class ticker_converter:
             'DRNA', # Buyout offer from Novo Nordisk is giving Dicerna shareholders a big reason to cheer.
             'KVSB', # Khosla Ventures Acquisition Co.
             'RAVN', # CNH Industrial Completes the Acquisition of Raven Industries
-            'XONE' # ExOne will continue to operate as a wholly owned subsidiary of Desktop Metal
+            'XONE', # ExOne will continue to operate as a wholly owned subsidiary of Desktop Metal
+            'XLNX'  # XLNX acquired by AMD.
             ,)):
             return None
         
