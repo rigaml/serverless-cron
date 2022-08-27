@@ -46,7 +46,7 @@ def get_downloader_index(s3_client):
 
 def get_tickers_set(s3_client):
     tickers = get_tickers_names(s3_client)
-    print(f'tickers: {tickers}')
+    # print(f'tickers: {tickers}')
 
     (last_day, last_name)= get_downloader_index(s3_client)
 
