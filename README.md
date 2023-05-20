@@ -24,12 +24,8 @@ https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-f
 https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
 https://spin.atomicobject.com/2021/06/16/docker-development-container/
 
-## Instructions
-
--Regenerate image after a change
-F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
-
-- Serverless Getting started
+## Setup 
+-Serverless Getting started
   https://www.serverless.com/framework/docs/getting-started
 
 -Installing prune by "hand" (doesn't seem to be installed from docker-compose.yml)
@@ -37,19 +33,27 @@ F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
    sls plugin install -n serverless-prune-plugin
 ```
 
-- Check if AWS CLI installed
+-Check if AWS CLI installed
 ```bash
   aws --version
 ```
 
-- Setup credetials with IAM user name: (Ke passa - serverless-test3) + us-east-1 + json
+## Deploy
+
+-Regenerate image after a change
+F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
+
+- Setup credetials with IAM user name: 
+AccessKEY: "Ke passa - serverless-test3"
+Region: us-east-1
+Format:json
 ```bash
   aws configure
 ```
 
 -Perform deployment:
 ```
-serverless deploy --stage prd
+  serverless deploy --stage prd
 ```
 
 -S3 commands
