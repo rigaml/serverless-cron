@@ -1,7 +1,7 @@
 {
   "name": "riga-cron",
   "version": "1.0.0",
-  "description": "Example of creating a function that runs as a cron job using the serverless `schedule` event",
+  "description": "Creates AWS lambda function that is triggered by a cron serverless `schedule` event.",
   "author": "Ricardo",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
   "devDependencies": {
     "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-ignore": "^0.2.1",
-    "serverless-offline": "^8.7.0",
-    "serverless-prune-plugin": "^2.0.1",
+    "serverless-offline": "^9.0.0",
+    "serverless-prune-plugin": "^2.0.2",
     "serverless-python-requirements": "^5.4.0"
   }
 }

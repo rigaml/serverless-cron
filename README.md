@@ -1,62 +1,62 @@
-# MIO
+# Download Yahoo Finance stocks data using serverless.
+Creates AWS lambda function that is triggered by a cron serverless `schedule` event.
 
-## TODO / NEXT TECHDAY
+## Description
 
--MIO: How to deploy lambdas locally
-+When list the lambdas in localstack displays []
+A simple Python script that downloads Yahoo Finance finantial summary data and stores it in S3.
+A lambda function is triggered multiple times during the day on a specified schedule. 
+For each company on each day the donwloaded the data is stored in folder inside S3 bucket.
 
--MIO: How to deploy lambdas to localstack locally
-Article: Localstack with Terraform and Docker for running AWS locally
-https://dev.to/mrwormhole/localstack-with-terraform-and-docker-for-running-aws-locally-3a6d
+Lambda input is read from file `config.DOWNLOADER_TICKERS_FILE` and a index file `config.DOWNLOADER_INDEX_FILE` keeps track of the last ticker data downloaded.
 
--MIO: How to trigger the lambdas locally
+## Environment Setup
+The project defines a development container, `Dockerfile.dev`, that installs all the application requirements inside the container. This allows to work on the application in isolation from the host machine.
 
--MIO: How to deploy to AWS with Terraform
+If using Visual Studio Code and Docker Desktop is running, press `F1` (or Ctrl+Shift+P) and select `Dev Containers: Rebuild and Reopen Container` to create the container.
 
--MIO: How to deploy SQLite with permissions to write in AWS S3 file
+Using [Serverless Framework](https://www.serverless.com/) with [Localstack](https://github.com/localstack/localstack) allows to create the AWS resources necessary so can execute and debug the application locally.
 
--Create a development container
-https://code.visualstudio.com/docs/remote/create-dev-container
--Docker from Docker Compose
-https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
+## Application Setup
 
--Using Docker as a Dev Environment with VS Code
-https://spin.atomicobject.com/2021/06/15/developing-docker-vs-code/
-https://spin.atomicobject.com/2021/06/16/docker-development-container/
+Create a bucket in AWS S3 with name `config.BUCKET_NAME`
+Create a folder inside this bucket with name `config.BUCKET_FOLDER` 
+Create a file `config.TICKERS_DOWNLOAD_FILE` with the list of stock tickers want to download from Yahoo. One ticker Id for each line of the file.
+Ticker names in the file should unique and ordered alphabetically.
 
-## Setup 
--Serverless Getting started
-  https://www.serverless.com/framework/docs/getting-started
+## Requirements
+All requeriments should be installed when opening VS Code usign the Docker.
 
--Installing prune by "hand" (doesn't seem to be installed from docker-compose.yml)
-```
-   sls plugin install -n serverless-prune-plugin
-```
+## Deploy to AWS
 
--Check if AWS CLI installed
-```bash
-  aws --version
-```
-
-## Deploy
-
--Regenerate image after a change
-F1 (or Ctrl+Shift+P) -> Remote-Container: Rebuild and Reopen Container
-
-- Setup credetials with IAM user name: 
-AccessKEY: "Ke passa - serverless-test3"
-Region: us-east-1
-Format:json
+- Set AWS credentials
 ```bash
   aws configure
 ```
 
--Perform deployment:
-```
+- Perform deployment:
+Register with [Serverless Framework](https://app.serverless.com/) to be able to deploy applications.
+
+```bash
   serverless deploy --stage prd
 ```
 
--S3 commands
+## Working locally
+
+- Local dependencies should have been installed with the `yarn` specified in `devcontainer.json` -> `postCreateCommand`.  
+
+- Start serverless framework
+```bash
+yarn dev
+```
+
+- Call a lambda function specifying the name of the function in `serverless.yml`
+```bash
+serverless invoke local --function cronDownloader
+```
+
+- List the content of S3
+Assuming files are stored in bucket `riga-cron-data`
+
 ```bash
 aws s3api list-buckets --endpoint-url=http://localhost:4566
 aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
@@ -67,193 +67,12 @@ aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Si
 ```bash
 aws lambda list-functions --max-items 10 --endpoint-url=http://localhost:4566
 ```
-
-python3 ./functions/handler.py
-
-aws lambda invoke --function-name testFunction --cli-binary-format raw-in-base64-out --payload file://event.json response.json
-
-To test functions locally
-serverless invoke local --function <serverless-function>
-ex. serverless invoke local --function cronDownloader
-
-To be able to include 3rd party dependencies in the `requirements.txt`
-serverless plugin install -n serverless-python-requirements
-
-The above adds `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and adds it as a `devDependency` to `package.json` file. Now you will be able to add your dependencies to `requirements.txt` file and they will be automatically injected to Lambda package during build process.
-
--Deploy to AWS: https://serverless-stack.com/chapters/stages-in-serverless-framework.html
-serverless deploy --stage prd
-
-### Files setup
-0000-excel-ark-movements-unique-sorted.csv:
-  Take 0000-ark-movements-totals.csv and sort by ticker
-  Update 0000-excel-ark-movements-unique-sorted.csv
-  Upload to AWS replacing existing file
-
-0000-cron-downloader-index.csv: 
-  Generated by the application
-  Tracks what was the last stock downloaded by the lambda 
-
-### Download from S3
-See C:\Users\ricardo\AAAMio\Projects\riga-stock-ark\README.md
-
-### AWS Cost
-https://docs.google.com/spreadsheets/d/e/2PACX-1vR0gBoKn8BmtP1zVXvjZb1w6KmLE8YNd7W-6nXkQ_3EzKmPu9PMT6U8XuJ72Gr-ZW-UlLRl0yLFRI4_/pubhtml
-
-### Errors
-- root@763e515bbffd:/usr/src# serverless deploy --stage prd
-Error: spawn python3.8 ENOENT
-
-====== INSTRUCTIONS IN THE REPO
-
-# Serverless Framework Python Scheduled Cron on AWS
-
-This template demonstrates how to develop and deploy a simple cron-like service running on AWS Lambda using the traditional Serverless Framework.
-
-## Schedule event type
-
-This examples defines two functions, `rateHandler` and `cronHandler`, both of which are triggered by an event of `schedule` type, which is used for configuring functions to be executed at specific time or in specific intervals. For detailed information about `schedule` event, please refer to corresponding section of Serverless [docs](https://serverless.com/framework/docs/providers/aws/events/schedule/).
-
-When defining `schedule` events, we need to use `rate` or `cron` expression syntax.
-
-### Rate expressions syntax
-
-```pseudo
-rate(value unit)
-```
-
-`value` - A positive number
-
-`unit` - The unit of time. ( minute | minutes | hour | hours | day | days )
-
-In below example, we use `rate` syntax to define `schedule` event that will trigger our `rateHandler` function every minute
-
-```yml
-functions:
-  rateHandler:
-    handler: handler.run
-    events:
-      - schedule: rate(1 minute)
-```
-
-Detailed information about rate expressions is available in official [AWS docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#RateExpressions).
-
-### Cron expressions syntax
-
-```pseudo
-cron(Minutes Hours Day-of-month Month Day-of-week Year)
-```
-
-All fields are required and time zone is UTC only.
-
-| Field        |     Values      |   Wildcards    |
-| ------------ | :-------------: | :------------: |
-| Minutes      |      0-59       |    , - \* /    |
-| Hours        |      0-23       |    , - \* /    |
-| Day-of-month |      1-31       | , - \* ? / L W |
-| Month        | 1-12 or JAN-DEC |    , - \* /    |
-| Day-of-week  | 1-7 or SUN-SAT  | , - \* ? / L # |
-| Year         |     192199      |    , - \* /    |
-
-In below example, we use `cron` syntax to define `schedule` event that will trigger our `cronHandler` function every second minute every Monday through Friday
-
-```yml
-functions:
-  cronHandler:
-    handler: handler.run
-    events:
-      - schedule: cron(0/2 * ? * MON-FRI *)
-```
-
-Detailed information about cron expressions in available in official [AWS docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions).
-
-## Usage
-
-### Deployment
-
-This example is made to work with the Serverless Framework dashboard, which includes advanced features such as CI/CD, monitoring, metrics, etc.
-
-In order to deploy with dashboard, you need to first login with:
-
-```
-serverless login
-```
-
-and then perform deployment with:
-
-```
-serverless deploy
-```
-
-After running deploy, you should see output similar to:
-
-```bash
-Serverless: Packaging service...
-Serverless: Excluding development dependencies...
-Serverless: Uploading CloudFormation file to S3...
-Serverless: Uploading artifacts...
-Serverless: Uploading service aws-python-scheduled-cron.zip file to S3 (84.82 KB)...
-Serverless: Validating template...
-Serverless: Updating Stack...
-Serverless: Checking Stack update progress...
-........................
-Serverless: Stack update finished...
-Service Information
-service: aws-python-scheduled-cron
-stage: dev
-region: us-east-1
-stack: aws-python-scheduled-cron-dev
-resources: 16
-api keys:
-  None
-endpoints:
-  None
-functions:
-  rateHandler: aws-python-scheduled-cron-dev-rateHandler
-  cronHandler: aws-python-scheduled-cron-dev-cronHandler
-layers:
-  None
-Serverless: Publishing service to the Serverless Dashboard...
-Serverless: Successfully published your service to the Serverless Dashboard: https://app.serverless.com/xxxx/apps/xxxx/aws-python-scheduled-cron/dev/us-east-1
-```
-
-There is no additional step required. Your defined schedules becomes active right away after deployment.
-
-### Local invocation
-
-In order to test out your functions locally, you can invoke them with the following command:
-
-```
-serverless invoke local --function rateHandler
-```
-
-After invocation, you should see output similar to:
-
-```bash
-INFO:handler:Your cron function aws-python-scheduled-cron-dev-rateHandler ran at 15:02:43.203145
-```
-
-### Bundling dependencies
-
-In case you would like to include 3rd party dependencies, you will need to use a plugin called `serverless-python-requirements`. You can set it up by running the following command:
-
-```bash
-serverless plugin install -n serverless-python-requirements
-```
-
-Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
-
--Boto3: AWS SDK
-https://towardsdatascience.com/introduction-to-pythons-boto3-c5ac2a86bb63
-
+## Next Steps
+- Create S3 buckets with Terraform.
 
 ## References
-- How to Handle your Python packaging in Lambda with Serverless plugins
-Compress Python libraries to deploy
-https://www.serverless.com/blog/serverless-python-packaging/
-https://www.serverless.com/plugins/serverless-python-requirements
+- Serverless Getting started
+  https://www.serverless.com/framework/docs/getting-started
 
 - Serverless CLI reference
-https://www.serverless.com/framework/docs/providers/aws/cli-reference
-
-- To see the plugin version installed check package.json
+  https://www.serverless.com/framework/docs/providers/aws/cli-reference

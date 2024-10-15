@@ -1,9 +1,2 @@
 boto3
 requests
-# Removed to make lambda simpler
-# pandas
-# openpyxl
-# Removed or deploy to AWS lambda goes over the limit
-# numpy
-# scipy
-# scikit-learn
