@@ -1,93 +1,78 @@
-FROM python:3.8-slim-buster
-
-#### Serverless
-
-# Use root user to have permissions to install
-# USER root
+# Create a development Docker image
+FROM python:3.11-slim-bullseye
 
 WORKDIR /usr/src
-# COPY . .
 
-# Creates a non-root user with an explicit UID and adds permission to access the folder
-# +NOTE: If set the user get "permission denied" when build container
-# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
-# USER appuser
-
-# Install
+# Install system dependencies
 RUN apt-get update -yq \
-    # DEBIAN_FRONTEND export avoids warnings when you go on to work with your container
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get upgrade -y \
     && apt-get dist-upgrade -y \
-    && apt-get -yq install curl gnupg software-properties-common apt-transport-https ca-certificates curl gnupg2 lsb-release \
-    # Install NodeJS
-    && curl -L https://deb.nodesource.com/setup_16.x | bash \
-    && apt-get install -yq nodejs \
-    # Install Terraform : https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/docker-get-started
-    # Add the HashiCorp GPG key.
-    && curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
-    # Add the official HashiCorp Linux repository.
-    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-    # Update to add the Terraform repository
-    && apt-get update -yq \ 
-    # Install the Terraform CLI
-    && apt-get install terraform -yq \
-    # Install Docker https://github.com/microsoft/vscode-dev-containers/tree/main/containers/docker-from-docker-compose
-    && curl -fsSL https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/gpg | apt-key add - 2>/dev/null \
-    && echo "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(lsb_release -is | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list \
-    && apt-get update \
-    && apt-get install -y docker-ce-cli \
-    && apt-get autoremove -y \
-    && apt-get clean -y
-
-# Install Unzip : https://stackoverflow.com/questions/41651145/docker-container-not-able-to-locate-zip-packages
-RUN apt-get install -y unzip \
-    # Install "less" as used by AWS commands: https://stackoverflow.com/questions/57953187/aws-cli-has-no-output
-    && apt-get install less \
+    && apt-get install -yq \
+        curl \
+        gnupg \
+        software-properties-common \
+        apt-transport-https \
+        ca-certificates \
+        lsb-release \
+        unzip \
+        less \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install AWS CLI 2
+# Install Node.js 18.x LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -yq nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Terraform
+RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list > /dev/null \
+    && apt-get update -yq \
+    && apt-get install -yq terraform \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Docker is used to create the Dev container: create Localstack image from outside VS Code # Install Docker CLI and Docker Compose
+# RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+#     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+#     && apt-get update \
+#     && apt-get install -y docker-ce-cli \
+#     && curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+#     && chmod +x /usr/local/bin/docker-compose \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
-    && rm -rf awscliv2.zip \
-    && rm -rf ./aws
+    && rm -rf awscliv2.zip ./aws
 
-# Installing Node packages required by serverless
-RUN npm install -g yarn
-# Install serverless globally - no need in packages.json
-RUN yarn global add serverless
-# No need - should be in the packages.json and installed when yarn
-# RUN yarn add serverless-offline -D
-# RUN yarn add serverless-iam-roles-per-function -D
-# RUN yarn add serverless-prune-plugin -D
+# Install Yarn and Serverless
+RUN npm install -g yarn \
+    && yarn global add serverless
 
-# RUN yarn
+# Default dummy AWS credentials to interact with localstack
+ENV AWS_ACCESS_KEY_ID=dummyaccesskey
+ENV AWS_SECRET_ACCESS_KEY=dummysecretkey
+ENV AWS_DEFAULT_REGION=us-east-1
+ENV AWS_DEFAULT_OUTPUT=json
+
+# Python setup
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Create and activate virtual environment
+RUN python3 -m venv /usr/src/venv
+ENV PATH="/usr/src/venv/bin:$PATH"
+
+# Copy requirements and install dependencies
+COPY ./requirements.txt ./
+RUN /usr/src/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 3000
 
-#### Python
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
-
-# Copy requirements
-COPY requirements.txt .
-
-#Create a virtual environment - avoids clashes between Python packages installed in requirements and packages in current OS or if updated  
-RUN python3 -m venv /usr/src/app
-#Install the requirements
-RUN python3 -m pip install -r requirements.txt
-
-# WORKDIR /usr/src/app
-# COPY ./src ./
-
-# Creates a non-root user with an explicit UID and adds permission to access the folder
-# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /usr/src
-# USER appuser
-
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+# Set the entrypoint
 CMD ["python3", "localstack/setup.py"]

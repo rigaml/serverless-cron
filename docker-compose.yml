@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   localstack:
-    image: localstack/localstack:0.13.1
+    image: localstack/localstack
     ports:
       - "4566:4566"
       - "4571:4571"
@@ -16,5 +16,5 @@ services:
       - LOCALSTACK_USE_SSL=false
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "${TMPDIR:-/var/tmp/localstack}:/var/tmp/localstack"
       - /var/run/docker.sock:/var/run/docker.sock
