@@ -1,3 +1,7 @@
+"""
+Download stock tickers information from Yahoo Finance API
+"""
+
 from datetime import datetime, date
 import logging
 import requests

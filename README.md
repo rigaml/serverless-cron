@@ -1,78 +1,103 @@
-# Download Yahoo Finance stocks data using serverless.
-Creates AWS lambda function that is triggered by a cron serverless `schedule` event.
+# Yahoo Finance Stock Data Downloader using AWS Lambda
+
+A serverless AWS Lambda function that periodically downloads stock data from Yahoo Finance and stores it in an S3 bucket.
 
 ## Description
 
-A simple Python script that downloads Yahoo Finance finantial summary data and stores it in S3.
-A lambda function is triggered multiple times during the day on a specified schedule. 
-For each company on each day the donwloaded the data is stored in folder inside S3 bucket.
+This project provides an AWS Lambda function that retrieves data from Yahoo Finance at scheduled intervals, based on a cron job. The retrieved data for each stock ticker is saved to a specific folder in an S3 bucket, with the tickers and schedule configurable.
 
-Lambda input is read from file `config.DOWNLOADER_TICKERS_FILE` and a index file `config.DOWNLOADER_INDEX_FILE` keeps track of the last ticker data downloaded.
+The Lambda function reads input from `config.DOWNLOADER_TICKERS_FILE`, which contains a list of stock tickers, and uses `config.DOWNLOADER_INDEX_FILE` to track the last processed ticker, ensuring no data is missed.
 
+## Features
+- Scheduled Lambda function triggered multiple times daily.
+- Data stored in a structured format in AWS S3.
+- Uses Serverless Framework and Localstack for local development and testing.
+  
 ## Environment Setup
-The project defines a development container, `Dockerfile.dev`, that installs all the application requirements inside the container. This allows to work on the application in isolation from the host machine.
 
-If using Visual Studio Code and Docker Desktop is running, press `F1` (or Ctrl+Shift+P) and select `Dev Containers: Rebuild and Reopen Container` to create the container.
+The project includes a development environment with a Docker container (`Dockerfile.dev`) that installs all necessary dependencies inside the container. This ensures isolation from the host machine, allowing smooth development.
 
-Using [Serverless Framework](https://www.serverless.com/) with [Localstack](https://github.com/localstack/localstack) allows to create the AWS resources necessary so can execute and debug the application locally.
+To get started with development:
+- If using Visual Studio Code, rebuild and reopen the container by pressing `F1` (or `Ctrl+Shift+P`), then select `Dev Containers: Rebuild and Reopen Container`.
+- Make sure Docker Desktop is running.
+
+Serverless Framework, in combination with Localstack, simulates the AWS environment locally, enabling local execution and debugging.
 
 ## Application Setup
 
-Create a bucket in AWS S3 with name `config.BUCKET_NAME`
-Create a folder inside this bucket with name `config.BUCKET_FOLDER` 
-Create a file `config.TICKERS_DOWNLOAD_FILE` with the list of stock tickers want to download from Yahoo. One ticker Id for each line of the file.
-Ticker names in the file should unique and ordered alphabetically.
+Before running the application, configure the following:
+1. **S3 Bucket**: Create an S3 bucket with the name specified in `config.BUCKET_NAME`.
+2. **S3 Folder**: Create a folder inside the bucket as defined in `config.BUCKET_FOLDER`.
+3. **Tickers File**: Create a tickers file (`config.TICKERS_DOWNLOAD_FILE`) inside the bucket containing a list of Yahoo Finance stock ticker symbols, each on a new line, sorted alphabetically.
 
 ## Requirements
-All requeriments should be installed when opening VS Code usign the Docker.
 
-## Deploy to AWS
+Ensure all dependencies are installed when opening the project in the Docker container (using Visual Studio Code with Dev Containers). The required libraries and dependencies will be set up automatically.
 
-- Set AWS credentials
-```bash
-  aws configure
-```
+## Deploying to AWS
 
-- Perform deployment:
-Register with [Serverless Framework](https://app.serverless.com/) to be able to deploy applications.
+To deploy the Lambda function to AWS, follow these steps:
 
-```bash
-  serverless deploy --stage prd
-```
+1. **Configure AWS Credentials**  
+   Run the following command to configure your AWS CLI:
+   ```bash
+   aws configure
+   ```
 
-## Working locally
+2. **Deploy with Serverless Framework**  
+   You will need to register/login at the [Serverless Framework](https://app.serverless.com/) to deploy the application. Once registered/login, deploy using:
+   ```bash
+   serverless deploy --stage prd
+   ```
 
-- Local dependencies should have been installed with the `yarn` specified in `devcontainer.json` -> `postCreateCommand`.  
+## Running Locally
 
-- Start serverless framework
-```bash
-yarn dev
-```
+1. **Install Dependencies**  
+   After building the development container, the Serverless/Node dependencies will be installed automatically through the `postCreateCommand` command specified in `devcontainer.json`.
 
-- Call a lambda function specifying the name of the function in `serverless.yml`
-```bash
-serverless invoke local --function cronDownloader
-```
+2. **Start the Serverless Framework**  
+   Start the local Serverless environment by running:
+   ```bash
+   yarn dev
+   ```
 
-- List the content of S3
-Assuming files are stored in bucket `riga-cron-data`
+3. **Run Localstack**  
+   If using Localstack for local testing, run the following command on your host machine (not from the Dev container) to start the services:
+   ```bash
+   docker-compose -f docker-compose.yml up
+   ```
 
-```bash
-aws s3api list-buckets --endpoint-url=http://localhost:4566
-aws s3api list-objects --bucket riga-cron-data --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
-```
+4. **Invoke Lambda Locally**  
+   Call the Lambda function locally by specifying the function name from `serverless.yml`:
+   ```bash
+   serverless invoke local --function cronDownloader
+   ```
 
--Check lambdas defined
+## Common local commands
 
-```bash
-aws lambda list-functions --max-items 10 --endpoint-url=http://localhost:4566
-```
-## Next Steps
-- Create S3 buckets with Terraform.
+- **Create a local S3 bucket**  
+   ```bash
+   aws s3api create-bucket --bucket your-unique-bucket-name --region us-east-1 --endpoint-url=http://localhost:4566
+   ```
+
+- **List S3 buckets**  
+   ```bash
+   aws s3api list-buckets --endpoint-url=http://localhost:4566
+   ```
+
+- **List objects in S3 bucket**  
+   ```bash
+   aws s3api list-objects --bucket your-unique-bucket-name --query 'Contents[].{Key: Key, Size: Size}' --endpoint-url=http://localhost:4566
+   ```
+
+- **List Lambda functions**  
+   ```bash
+   aws lambda list-functions --max-items 10 --endpoint-url=http://localhost:4566
+   ```
+
+## Future Enhancements
+- Implement S3 bucket creation and management using Terraform for infrastructure as code.
 
 ## References
-- Serverless Getting started
-  https://www.serverless.com/framework/docs/getting-started
-
-- Serverless CLI reference
-  https://www.serverless.com/framework/docs/providers/aws/cli-reference
+- [Serverless Framework: Getting Started](https://www.serverless.com/framework/docs/getting-started)
+- [Serverless CLI Reference](https://www.serverless.com/framework/docs/providers/aws/cli-reference)

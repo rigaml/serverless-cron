@@ -5,7 +5,6 @@
   "author": "Ricardo",
   "private": true,
   "scripts": {
-    "localstack": "docker-compose -f docker-compose.yml up",
     "dev": "serverless offline start --printOutput --stage local"
   },
   "devDependencies": {
