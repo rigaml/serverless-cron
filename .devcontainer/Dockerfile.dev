@@ -60,8 +60,9 @@ ENV AWS_SECRET_ACCESS_KEY=dummysecretkey
 ENV AWS_DEFAULT_REGION=us-east-1
 ENV AWS_DEFAULT_OUTPUT=json
 
-# Python setup
+# Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
+# Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
 # Create and activate virtual environment

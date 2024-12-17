@@ -23,4 +23,4 @@ DOWNLOADER_INDEX_FILE = '0000-cron-downloader-index.csv'
 TICKERS_PER_REQUEST = 5
 
 # Value in the DOWNLOADER_INDEX_FILE that indicates that all tickers have been downloaded for the day
-DOWNLOADER_INDEX_MARK = '[EOF]'
+DOWNLOADER_EOF_MARK = '[EOF]'

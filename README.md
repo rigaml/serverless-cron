@@ -1,5 +1,11 @@
 # Yahoo Finance Stock Data Downloader using AWS Lambda
 
+## TODO: 
+Make Serverless to work with LocalStack as at the moment is calling Prod when executing a command that points to local
+Example: Command 
+   serverless invoke local --function cronDownloader 
+Executes lambda in AWS (if AWS Prod credentials are correct)
+
 A serverless AWS Lambda function that periodically downloads stock data from Yahoo Finance and stores it in an S3 bucket.
 
 ## Description
