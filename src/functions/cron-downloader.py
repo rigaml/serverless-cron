@@ -40,7 +40,7 @@ def get_downloader_index(s3_client):
         last_name = values[1]
     else:
         last_day = '2000-01-01'
-        last_name = config.DOWNLOADER_INDEX_MARK
+        last_name = config.DOWNLOADER_EOF_MARK
 
     return (datetime.strptime(last_day, '%Y-%m-%d').date(), last_name)
 
@@ -54,7 +54,7 @@ def get_tickers_set(s3_client):
     if (last_day < today):
         return (tickers[0:config.TICKERS_PER_REQUEST], False)
 
-    if last_name == config.DOWNLOADER_INDEX_MARK:
+    if last_name == config.DOWNLOADER_EOF_MARK:
         return ([], False)
 
     if last_name in tickers:
@@ -68,37 +68,52 @@ def get_tickers_set(s3_client):
     return (tickers[0:config.TICKERS_PER_REQUEST], False)
 
 
-def run(event, context):
-    start_time_string = datetime.now().strftime("%Y-%m-%d-%H%M")
-    today_date_string = date.today().strftime("%Y-%m-%d")
+def download_ticker(s3_client, ticker: str, today_date: str, start_time: str):
+    quote_summary_url = (
+        f'{config.DOWNLOAD_URL}{ticker}?{config.DOWNLOAD_URL_QUERY}{config.DOWNLOAD_URL_EXTRA_QUERY}')
+    try:
+        response = requests.get(quote_summary_url, headers=headers)
+        if response.ok:
+            s3_client.put_object(
+                Body=response.content,
+                Bucket=config.BUCKET_NAME,
+                Key=f'{config.BUCKET_FOLDER}{today_date}/{start_time}-{ticker}.json')
+        else:
+            logger.error(f'Failed to retrieve: {quote_summary_url} Status Response {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to retrieve: {quote_summary_url}", exc_info=True)
+
+
+def set_downloaded_index(s3_client, ticker: str, today_date: str):
+    save_file(s3_client, config.DOWNLOADER_INDEX_FILE, f'{today_date},{ticker}')
+
+
+def download_tickers_data(event, context):
+    start_time = datetime.now().strftime("%Y-%m-%d-%H%M")
+    today_date = date.today().strftime("%Y-%m-%d")
 
     s3_client = boto3.client('s3')
 
     (tickers, save_eof) = get_tickers_set(s3_client)
 
     if len(tickers) == 0 and save_eof:
-        save_file(s3_client, config.DOWNLOADER_INDEX_FILE, f'{today_date_string},{config.DOWNLOADER_INDEX_MARK}')
+        set_downloaded_index(s3_client, config.DOWNLOADER_EOF_MARK, today_date)
 
     for counter, ticker in enumerate(tickers):
         logger.info(f'ticker ({counter}): {ticker}')
+
         request_ticker = tc.convert_yahoo_name(ticker)
         if (request_ticker is None):
             logger.info('  > skipping ticker')
             continue
 
-        quote_summary_url = f'{config.DOWNLOAD_URL}{request_ticker}?{config.DOWNLOAD_URL_QUERY}{config.DOWNLOAD_URL_EXTRA_QUERY}'
-        response = requests.get(quote_summary_url, headers=headers)
-        if (response.ok):
-            s3_client.put_object(Body=response.content, Bucket=config.BUCKET_NAME,
-                                 Key=f'{config.BUCKET_FOLDER}{today_date_string}/{start_time_string}-{request_ticker}.json')
-        else:
-            logger.error(f'Failed to retrieve: {request_ticker} response {response.status_code}')
+        download_ticker(s3_client, ticker, today_date, start_time)
 
-        save_file(s3_client, config.DOWNLOADER_INDEX_FILE, f'{today_date_string},{ticker}')
+        set_downloaded_index(s3_client, ticker, today_date)
 
 
 if __name__ == "__main__":
-    # Dummy event and context for local testing
+    # Dummy event and context for when executing lambda in local testing
     dummy_event = {}
     dummy_context = type('obj', (object,), {'function_name': 'dummy_function'})
-    run(dummy_event, dummy_context)
+    download_tickers_data(dummy_event, dummy_context)
